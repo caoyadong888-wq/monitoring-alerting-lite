@@ -1,0 +1,4 @@
+# Lite sample list. One host or host:port per line.
+app.example.com
+192.0.2.15:443
+10.1.2.3:8443
