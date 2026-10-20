@@ -34,3 +34,8 @@ python3 deliverables/check_certs.py --hosts examples/hosts.txt --warn-days 30
 全部高于警告阈值时退出 `0`。有证书落到阈值上或握手失败时退出 `1`。默认校验证书链，私有证书加 `--insecure`。
 
 Full version: GUMROAD_URL
+
+## Delivery time / 交付时间
+
+- Lite (this repo): free, available now. / 精简版（本仓库）：免费，立即可用。
+- Full version: instant download after purchase (GUMROAD_URL). / 完整版：购买后即时下载（GUMROAD_URL）。
