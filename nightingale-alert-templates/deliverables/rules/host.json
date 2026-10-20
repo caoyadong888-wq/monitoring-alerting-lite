@@ -1,0 +1,454 @@
+[
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "主机 CPU 使用率过高",
+    "note": "cpu_usage_active stays above 85 percent (warning) or 95 percent (critical). Categraf cpu plugin, cpu=cpu-total.",
+    "disabled": 0,
+    "prom_for_duration": 300,
+    "prom_eval_interval": 30,
+    "prom_ql": "avg by (ident) (cpu_usage_active{cpu=\"cpu-total\"}) > 85",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-cpu",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Host CPU is high on {{$labels.ident}} (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 的 CPU 使用率过高（当前 {{$value}}）",
+      "description": "cpu_usage_active for cpu-total has been above the threshold for 5 minutes.",
+      "description_zh": "cpu-total 的 cpu_usage_active 已连续 5 分钟高于阈值。"
+    },
+    "rule_config": {
+      "inhibit": true,
+      "queries": [
+        {
+          "prom_ql": "avg by (ident) (cpu_usage_active{cpu=\"cpu-total\"}) > 85",
+          "severity": 2
+        },
+        {
+          "prom_ql": "avg by (ident) (cpu_usage_active{cpu=\"cpu-total\"}) > 95",
+          "severity": 1
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "主机 CPU IO wait 过高",
+    "note": "cpu_usage_iowait above 25 percent for 5 minutes. Disk or network filesystem is stalling the CPU.",
+    "disabled": 0,
+    "prom_for_duration": 300,
+    "prom_eval_interval": 30,
+    "prom_ql": "avg by (ident) (cpu_usage_iowait{cpu=\"cpu-total\"}) > 25",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-iowait",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "IO wait is high on {{$labels.ident}} (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 的 IO wait 过高（当前 {{$value}}）",
+      "description": "cpu_usage_iowait has been above 25 percent for 5 minutes.",
+      "description_zh": "cpu_usage_iowait 已连续 5 分钟高于 25%。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "avg by (ident) (cpu_usage_iowait{cpu=\"cpu-total\"}) > 25",
+          "severity": 2
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "主机可用内存不足",
+    "note": "mem_available_percent under 15 (warning) or under 8 (critical). This is available memory, not free memory.",
+    "disabled": 0,
+    "prom_for_duration": 180,
+    "prom_eval_interval": 30,
+    "prom_ql": "avg by (ident) (mem_available_percent) < 15",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-memory",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Available memory is low on {{$labels.ident}} (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 可用内存不足（当前 {{$value}}）",
+      "description": "mem_available_percent has been under the threshold for 3 minutes.",
+      "description_zh": "mem_available_percent 已连续 3 分钟低于阈值。"
+    },
+    "rule_config": {
+      "inhibit": true,
+      "queries": [
+        {
+          "prom_ql": "avg by (ident) (mem_available_percent) < 15",
+          "severity": 2
+        },
+        {
+          "prom_ql": "avg by (ident) (mem_available_percent) < 8",
+          "severity": 1
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "磁盘使用率过高",
+    "note": "disk_used_percent above 85 or 95 on ext4, xfs, or btrfs, ignoring /boot. Categraf disk plugin, label path.",
+    "disabled": 0,
+    "prom_for_duration": 300,
+    "prom_eval_interval": 30,
+    "prom_ql": "disk_used_percent{fstype=~\"ext4|xfs|btrfs\",path!~\"/boot|/boot/efi\"} > 85",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-disk",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Disk {{$labels.path}} on {{$labels.ident}} is filling (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 的磁盘 {{$labels.path}} 空间不足（当前 {{$value}}）",
+      "description": "disk_used_percent has been above the threshold for 5 minutes.",
+      "description_zh": "disk_used_percent 已连续 5 分钟高于阈值。"
+    },
+    "rule_config": {
+      "inhibit": true,
+      "queries": [
+        {
+          "prom_ql": "disk_used_percent{fstype=~\"ext4|xfs|btrfs\",path!~\"/boot|/boot/efi\"} > 85",
+          "severity": 2
+        },
+        {
+          "prom_ql": "disk_used_percent{fstype=~\"ext4|xfs|btrfs\",path!~\"/boot|/boot/efi\"} > 95",
+          "severity": 1
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "磁盘 inode 使用率过高",
+    "note": "inodes used above 80 percent. A full inode table blocks creates even when df still shows bytes free.",
+    "disabled": 0,
+    "prom_for_duration": 600,
+    "prom_eval_interval": 30,
+    "prom_ql": "100 * disk_inodes_used{fstype=~\"ext4|xfs|btrfs\"} / clamp_min(disk_inodes_total{fstype=~\"ext4|xfs|btrfs\"}, 1) > 80",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-inodes",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Inodes are filling on {{$labels.path}} ({{$labels.ident}})",
+      "summary_zh": "主机 {{$labels.ident}} 的 {{$labels.path}} inode 即将用尽",
+      "description": "Inode use has been above 80 percent for 10 minutes.",
+      "description_zh": "inode 使用率已连续 10 分钟高于 80%。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "100 * disk_inodes_used{fstype=~\"ext4|xfs|btrfs\"} / clamp_min(disk_inodes_total{fstype=~\"ext4|xfs|btrfs\"}, 1) > 80",
+          "severity": 2
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "系统负载相对核数过高",
+    "note": "system_load5 divided by system_n_cpus is above 1.5 for 10 minutes.",
+    "disabled": 0,
+    "prom_for_duration": 600,
+    "prom_eval_interval": 30,
+    "prom_ql": "avg by (ident) (system_load5) / clamp_min(avg by (ident) (system_n_cpus), 1) > 1.5",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-load",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Load per CPU is high on {{$labels.ident}} (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 的每核负载过高（当前 {{$value}}）",
+      "description": "load5 / n_cpus has been above 1.5 for 10 minutes.",
+      "description_zh": "load5 除以核数已连续 10 分钟高于 1.5。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "avg by (ident) (system_load5) / clamp_min(avg by (ident) (system_n_cpus), 1) > 1.5",
+          "severity": 2
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "网卡入向错误升高",
+    "note": "rate of net_err_in above 5 per second for 5 minutes, skipping loopback and bridge interfaces.",
+    "disabled": 0,
+    "prom_for_duration": 300,
+    "prom_eval_interval": 30,
+    "prom_ql": "rate(net_err_in{interface!~\"lo|docker.*|veth.*|cni.*|flannel.*\"}[5m]) > 5",
+    "severity": 2,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-net-err",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "Inbound NIC errors on {{$labels.ident}} interface {{$labels.interface}}",
+      "summary_zh": "主机 {{$labels.ident}} 网卡 {{$labels.interface}} 入向错误升高",
+      "description": "net_err_in has been above 5 per second for 5 minutes.",
+      "description_zh": "net_err_in 已连续 5 分钟高于每秒 5 次。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "rate(net_err_in{interface!~\"lo|docker.*|veth.*|cni.*|flannel.*\"}[5m]) > 5",
+          "severity": 2
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  },
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "TCP TIME_WAIT 过多",
+    "note": "netstat_tcp_time_wait above 20000 for 10 minutes. Severity notice, because many short HTTP clients sit here on purpose.",
+    "disabled": 0,
+    "prom_for_duration": 600,
+    "prom_eval_interval": 30,
+    "prom_ql": "netstat_tcp_time_wait > 20000",
+    "severity": 3,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-host#host-time-wait",
+    "append_tags": [
+      "service=host",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "TIME_WAIT is high on {{$labels.ident}} (value {{$value}})",
+      "summary_zh": "主机 {{$labels.ident}} 的 TIME_WAIT 过多（当前 {{$value}}）",
+      "description": "netstat_tcp_time_wait has been above 20000 for 10 minutes.",
+      "description_zh": "netstat_tcp_time_wait 已连续 10 分钟高于 20000。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "netstat_tcp_time_wait > 20000",
+          "severity": 3
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  }
+]

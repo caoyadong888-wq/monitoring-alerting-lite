@@ -1,0 +1,63 @@
+# Original alerting rules for prometheus/mysqld_exporter 0.15.
+# Needs Prometheus 2.36 or newer because some expressions use clamp_min.
+# Thresholds are starting points for one primary. Tune them before you page.
+groups:
+  - name: mysqld_exporter
+    interval: 1m
+    rules:
+      - alert: MySQLExporterDown
+        expr: |
+          mysql_up == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: mysql
+          exporter: mysqld_exporter
+        annotations:
+          summary: "MySQL exporter cannot reach mysqld ({{ $labels.instance }})"
+          summary_zh: "MySQL 导出器连不上 mysqld（{{ $labels.instance }}）"
+          description: "mysql_up on job {{ $labels.job }} has been 0 for 2 minutes. Current value {{ $value }}. Check the mysqld process, the exporter DSN, and TCP 9104."
+          description_zh: "任务 {{ $labels.job }} 的 mysql_up 已连续 2 分钟为 0。当前值 {{ $value }}。请检查 mysqld 进程、导出器 DSN 和 TCP 9104。"
+          runbook_url: "https://ops.example.com/runbooks/mysqld#mysql-exporter-down"
+      - alert: MySQLConnectionsFilling
+        expr: |
+          (100 * mysql_global_status_threads_connected / clamp_min(mysql_global_variables_max_connections, 1)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: mysql
+          exporter: mysqld_exporter
+        annotations:
+          summary: "MySQL connections are filling max_connections on {{ $labels.instance }}"
+          summary_zh: "MySQL 连接数正在接近上限（{{ $labels.instance }}）"
+          description: "Connected threads are {{ $value }} percent of max_connections on job {{ $labels.job }} and have stayed above 80 percent for 5 minutes."
+          description_zh: "任务 {{ $labels.job }} 的已连接线程占 max_connections 的 {{ $value }}%，并且已连续 5 分钟高于 80%。"
+          runbook_url: "https://ops.example.com/runbooks/mysqld#mysql-connections-filling"
+      - alert: MySQLSlowQueryBurst
+        expr: |
+          rate(mysql_global_status_slow_queries[5m]) > 0.2
+        for: 5m
+        labels:
+          severity: warning
+          service: mysql
+          exporter: mysqld_exporter
+        annotations:
+          summary: "MySQL slow queries are rising on {{ $labels.instance }}"
+          summary_zh: "MySQL 慢查询突然增多（{{ $labels.instance }}）"
+          description: "The 5 minute rate of slow queries on job {{ $labels.job }} is above 0.2 per second (about 12 per minute) for 5 minutes."
+          description_zh: "任务 {{ $labels.job }} 的慢查询 5 分钟速率已连续 5 分钟高于每秒 0.2 次（大约每分钟 12 次）。"
+          runbook_url: "https://ops.example.com/runbooks/mysqld#mysql-slow-query-burst"
+      - alert: MySQLReplicaLagHigh
+        expr: |
+          mysql_slave_status_seconds_behind_master > 30
+        for: 5m
+        labels:
+          severity: warning
+          service: mysql
+          exporter: mysqld_exporter
+        annotations:
+          summary: "MySQL replica lag is high ({{ $labels.instance }})"
+          summary_zh: "MySQL 复制延迟过高（{{ $labels.instance }}）"
+          description: "Seconds_Behind_Master is {{ $value }} on job {{ $labels.job }} and has stayed above 30 seconds for 5 minutes."
+          description_zh: "任务 {{ $labels.job }} 的 Seconds_Behind_Master 为 {{ $value }} 秒，已连续 5 分钟超过 30 秒。"
+          runbook_url: "https://ops.example.com/runbooks/mysqld#mysql-replica-lag-high"

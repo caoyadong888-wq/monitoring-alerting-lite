@@ -1,0 +1,50 @@
+# Original alerting rules for prometheus/blackbox_exporter.
+# The scrape examples set the instance label to the probed URL.
+groups:
+  - name: blackbox_exporter
+    interval: 1m
+    rules:
+      - alert: BlackboxProbeFailed
+        expr: |
+          probe_success == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: blackbox
+          exporter: blackbox_exporter
+        annotations:
+          summary: "Blackbox probe is failing ({{ $labels.instance }})"
+          summary_zh: "Blackbox 探测失败（{{ $labels.instance }}）"
+          description: "probe_success for {{ $labels.instance }} on job {{ $labels.job }} has been 0 for 2 minutes. Current value {{ $value }}."
+          description_zh: "任务 {{ $labels.job }} 上 {{ $labels.instance }} 的 probe_success 已连续 2 分钟为 0。当前值 {{ $value }}。"
+          runbook_url: "https://ops.example.com/runbooks/blackbox#blackbox-probe-failed"
+      - alert: BlackboxProbeSlow
+        expr: |
+          probe_duration_seconds > 2 and probe_success == 1
+        for: 5m
+        labels:
+          severity: warning
+          service: blackbox
+          exporter: blackbox_exporter
+        annotations:
+          summary: "Blackbox probe is slow but succeeding ({{ $labels.instance }})"
+          summary_zh: "Blackbox 探测成功但很慢（{{ $labels.instance }}）"
+          description: "Probe duration is {{ $value }} seconds for {{ $labels.instance }} on job {{ $labels.job }} and has stayed above 2 seconds for 5 minutes, while the probe still succeeds."
+          description_zh: "任务 {{ $labels.job }} 上 {{ $labels.instance }} 的探测耗时为 {{ $value }} 秒，已连续 5 分钟超过 2 秒，但探测仍然成功。"
+          runbook_url: "https://ops.example.com/runbooks/blackbox#blackbox-probe-slow"
+      - alert: BlackboxTLSCertCritical
+        expr: |
+          ((probe_ssl_earliest_cert_expiry - time()) / 86400 < 3)
+          and probe_success == 1
+          and probe_ssl_earliest_cert_expiry > 0
+        for: 15m
+        labels:
+          severity: critical
+          service: blackbox
+          exporter: blackbox_exporter
+        annotations:
+          summary: "TLS certificate expires within 3 days ({{ $labels.instance }})"
+          summary_zh: "TLS 证书将在 3 天内到期（{{ $labels.instance }}）"
+          description: "The earliest certificate on {{ $labels.instance }} (job {{ $labels.job }}) has fewer than 3 days left. Browsers will start failing soon after that."
+          description_zh: "{{ $labels.instance }}（任务 {{ $labels.job }}）上最早到期的证书剩余不足 3 天。过了这个窗口，浏览器很快就会失败。"
+          runbook_url: "https://ops.example.com/runbooks/blackbox#blackbox-tls-cert-critical"

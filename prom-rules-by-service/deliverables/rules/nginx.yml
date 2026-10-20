@@ -1,0 +1,34 @@
+# Original alerting rules for nginx/nginx-prometheus-exporter stub_status metrics.
+# nginx_up is the exporter view of stub_status, separate from Prometheus up.
+groups:
+  - name: nginx_exporter
+    interval: 1m
+    rules:
+      - alert: NginxExporterDown
+        expr: |
+          nginx_up == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: nginx
+          exporter: nginx_prometheus_exporter
+        annotations:
+          summary: "nginx-prometheus-exporter cannot read stub_status ({{ $labels.instance }})"
+          summary_zh: "nginx-prometheus-exporter 读不到 stub_status（{{ $labels.instance }}）"
+          description: "nginx_up on job {{ $labels.job }} has been 0 for 2 minutes. Current value {{ $value }}. The exporter is up enough to be scraped, but stub_status is not."
+          description_zh: "任务 {{ $labels.job }} 的 nginx_up 已连续 2 分钟为 0。当前值 {{ $value }}。导出器还能被抓取，但 stub_status 不通。"
+          runbook_url: "https://ops.example.com/runbooks/nginx#nginx-exporter-down"
+      - alert: NginxConnectionsNotHandled
+        expr: |
+          (rate(nginx_connections_accepted[5m]) - rate(nginx_connections_handled[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: nginx
+          exporter: nginx_prometheus_exporter
+        annotations:
+          summary: "Nginx is accepting connections it does not handle ({{ $labels.instance }})"
+          summary_zh: "Nginx 接受了处理不了的连接（{{ $labels.instance }}）"
+          description: "On job {{ $labels.job }}, accepted connections outpace handled connections by more than 1 per second for 5 minutes. Workers are dropping new connections."
+          description_zh: "任务 {{ $labels.job }} 上，accepted 比 handled 每秒多出 1 个以上，已持续 5 分钟。worker 在丢掉新连接。"
+          runbook_url: "https://ops.example.com/runbooks/nginx#nginx-connections-not-handled"

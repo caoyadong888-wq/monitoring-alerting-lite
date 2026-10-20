@@ -1,0 +1,36 @@
+# Original alerting rules for oliver006/redis_exporter.
+# Metric names use the _total counters and redis_up / redis_master_link_up gauges.
+# Needs Prometheus 2.36 or newer (clamp_min).
+groups:
+  - name: redis_exporter
+    interval: 1m
+    rules:
+      - alert: RedisExporterDown
+        expr: |
+          redis_up == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: redis
+          exporter: redis_exporter
+        annotations:
+          summary: "Redis exporter cannot reach Redis ({{ $labels.instance }})"
+          summary_zh: "Redis 导出器连不上 Redis（{{ $labels.instance }}）"
+          description: "redis_up on job {{ $labels.job }} has been 0 for 2 minutes. Current value {{ $value }}. Check redis-server and the exporter address."
+          description_zh: "任务 {{ $labels.job }} 的 redis_up 已连续 2 分钟为 0。当前值 {{ $value }}。请检查 redis-server 和导出器地址。"
+          runbook_url: "https://ops.example.com/runbooks/redis#redis-exporter-down"
+      - alert: RedisMemoryNearMax
+        expr: |
+          (100 * redis_memory_used_bytes / clamp_min(redis_memory_max_bytes, 1) > 90)
+          and redis_memory_max_bytes > 0
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+          exporter: redis_exporter
+        annotations:
+          summary: "Redis memory is near maxmemory ({{ $labels.instance }})"
+          summary_zh: "Redis 内存接近 maxmemory（{{ $labels.instance }}）"
+          description: "Used memory is {{ $value }} percent of maxmemory on job {{ $labels.job }} and has stayed above 90 percent for 5 minutes."
+          description_zh: "任务 {{ $labels.job }} 的已用内存占 maxmemory 的 {{ $value }}%，并且已连续 5 分钟高于 90%。"
+          runbook_url: "https://ops.example.com/runbooks/redis#redis-memory-near-max"

@@ -1,0 +1,57 @@
+[
+  {
+    "cate": "prometheus",
+    "prod": "metric",
+    "name": "HTTP 探测失败",
+    "note": "probe_success is 0 for 2 minutes. Instance label should be the target URL.",
+    "disabled": 0,
+    "prom_for_duration": 120,
+    "prom_eval_interval": 30,
+    "prom_ql": "probe_success == 0",
+    "severity": 1,
+    "enable_stime": "00:00",
+    "enable_etime": "23:59",
+    "enable_days_of_week": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "0"
+    ],
+    "enable_in_bg": 0,
+    "notify_recovered": 1,
+    "notify_channels": [],
+    "notify_groups": [],
+    "notify_repeat_step": 15,
+    "notify_max_number": 0,
+    "recover_duration": 180,
+    "callbacks": [],
+    "runbook_url": "https://ops.example.com/runbooks/n9e-http-probe#http-down",
+    "append_tags": [
+      "service=http",
+      "pack=nightingale-alert-templates"
+    ],
+    "annotations": {
+      "summary": "HTTP probe failed for {{$labels.instance}}",
+      "summary_zh": "HTTP 探测失败：{{$labels.instance}}",
+      "description": "probe_success has been 0 for 2 minutes.",
+      "description_zh": "probe_success 已连续 2 分钟为 0。"
+    },
+    "rule_config": {
+      "inhibit": false,
+      "queries": [
+        {
+          "prom_ql": "probe_success == 0",
+          "severity": 1
+        }
+      ]
+    },
+    "datasource_ids": [],
+    "algorithm": "",
+    "algo_params": null,
+    "delay": 0,
+    "cluster": ""
+  }
+]
